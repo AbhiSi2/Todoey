@@ -10,13 +10,41 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    var itemArray = ["Naturals","Real","PaperBoat"]
+    var itemArray = [ItemModel]()
+
+    
+    
+    
     let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+        
+        let item1 = ItemModel()
+        item1.itemName = "Naturals"
+        item1.itemStatus = true
+        
+        let item2 = ItemModel()
+        item2.itemName = "Real"
+        item2.itemStatus = true
+        
+        
+        let item3 = ItemModel()
+        item3.itemName = "PaperBoat"
+        item3.itemStatus = true
+        
+        let item4 = ItemModel()
+        item4.itemName = "MinuteMaid"
+        item4.itemStatus = true
+        
+        itemArray.append(item1)
+        itemArray.append(item2)
+        itemArray.append(item3)
+        itemArray.append(item4)
+
+        
+        if let items = defaults.array(forKey: "TodoListArray") as? [ItemModel] {
         itemArray = items
         }
     }
@@ -27,19 +55,25 @@ class TodoListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier:"TodoItemCell", for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+        cell.textLabel?.text = itemArray[indexPath.row].itemName
         
+        cell.accessoryType = itemArray[indexPath.row].itemStatus ? .checkmark : .none
+
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        }
-        else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        itemArray[indexPath.row].itemStatus = !itemArray[indexPath.row].itemStatus
+
+//        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
+//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+//        }
+//        else {
+//            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+//        }
+        
+        tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -51,7 +85,10 @@ class TodoListViewController: UITableViewController {
         
         let alertAction = UIAlertAction.init(title: "Add" , style: .default) { (action) in
             
-            self.itemArray.append(text.text!)
+            let item5 = ItemModel()
+            item5.itemName = text.text!
+            
+            self.itemArray.append(item5)
             self.defaults .setValue(self.itemArray, forKey: "TodoListArray")
             self.tableView.reloadData()
             
