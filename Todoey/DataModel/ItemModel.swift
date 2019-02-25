@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ItemModel {
+class ItemModel : Codable{
     var itemName = ""
     var itemStatus = false
 }
